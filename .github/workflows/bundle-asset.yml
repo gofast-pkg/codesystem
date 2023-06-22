@@ -1,0 +1,43 @@
+name: Bundle assets
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: create zip for application files
+        uses: vimtor/action-zip@v1
+        with:
+          files: common/.mockery.yaml common/golangci.yaml app/Makefile
+          dest: app-codesystem.zip
+      - name: create zip for libraries files
+        uses: vimtor/action-zip@v1
+        with:
+          files: common/.mockery.yaml common/golangci.yaml 
+          dest: lib-codesystem.zip
+      - name: Get tag
+        id: get_tag
+        run: |
+          cat CHANGELOG.txt | grep "##" | sed 's/## //g' > TAG
+          echo "RELEASE_TAG=$(cat TAG)" >> $GITHUB_ENV
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ env.RELEASE_TAG }}"
+          prerelease: false
+          draft: false
+          files: |
+            ${{ github.workspace }}/app-codesystem.zip
+            ${{ github.workspace }}/lib-codesystem.zip
+          body_path: CHANGELOG.txt

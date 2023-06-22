@@ -1,0 +1,25 @@
+# action.yml
+
+name: 'codesystem-checker'
+description: 'Git action to check which your code system files are up to date'
+inputs:
+  type:
+    description: 'type of `code system` to check (possible values: [app, lib])'
+    required: true
+    default: 'app'
+  context:
+    description: 'path to the context to check'
+    required: true
+    default: '.'
+outputs:
+  config:
+    description: 'valid status of the code system'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.type }}
+    - ${{ inputs.context }}
+branding:
+  icon: 'box'  
+  color: 'black'
