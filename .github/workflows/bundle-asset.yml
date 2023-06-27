@@ -17,12 +17,12 @@ jobs:
       - name: create zip for application files
         uses: vimtor/action-zip@v1
         with:
-          files: common/.mockery.yaml common/golangci.yaml app/Makefile
+          files: common/ app/
           dest: app-codesystem.zip
       - name: create zip for libraries files
         uses: vimtor/action-zip@v1
         with:
-          files: common/.mockery.yaml common/golangci.yaml 
+          files: common/ lib/ 
           dest: lib-codesystem.zip
       - name: Get tag
         id: get_tag
