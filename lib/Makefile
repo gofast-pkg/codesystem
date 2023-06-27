@@ -10,7 +10,6 @@ TESTREPORT_FILE=test_report.txt
 BENCHREPORT_FILE=bench_report.txt
 GODOC_PROCESS=godoc_process.txt
 LINTER_VERSION=v1.53.3
-SWAGGO_VERSION=v1.8.12
 MOCKERY_VERSION=v2.30.1
 MODULE_NAME := $(shell go list -m)
 
@@ -70,12 +69,6 @@ tool: ci-tool
 		go install github.com/vektra/mockery/v2/...@${MOCKERY_VERSION}; \
 		mockery --version --quiet; \
 	fi
-	@VERSION=$(shell swag --version 2>/dev/null | sed -rn "s/.* (v[0-9]+.[0-9]+.[0-9]+)$$/\1/p"); \
-	if [ $$VERSION+"x" != ${SWAGGO_VERSION}+"x" ]; then \
-		echo "swaggo installation (${SWAGGO_VERSION})"; \
-		go install github.com/swaggo/swag/cmd/swag@${SWAGGO_VERSION}; \
-		swag --version; \
-	fi
 
 ## Install dependencies
 .PHONY: dep
@@ -116,30 +109,15 @@ bench:
 	| sed ''/RUN/s//`printf "\033[36mRUN\033[0m"`/''; exit 1; }
 	@echo "benchmarks are a success ! report generated in ${IGNORED_FOLDER}/${BENCHREPORT_FILE}"
 
-## Run the build for all commands inside the cmd folder
-## the default GOOS and GOARCH are used.
-## generate the binaries inside a 'bin' folder.
-## the binaries generated should take the name with <cmd_name>-<GOOS>-<GOARCH>
+## Build packages
 .PHONY: build
-build: $(shell ls -d cmd/* | sed -e 's/cmd\//build./')
-	@
-
-## Run the build for the specific command with 'build.<cmd_name>'
-## <cmd_name> should match with the specific folder name inside the cmd folder
-## check the build rule to have the specific behavior about the build
-.PHONY: build.%
-build.%:
-	$(eval APP_NAME := $*)
-	$(eval GOOS := $(shell go env GOOS))
-	$(eval GOARCH := $(shell go env GOARCH))
-	CGO_ENABLED=1 go build -tags static -ldflags "-s -w -X main.appName=${APP_NAME}" \
-		-o ${BIN_FOLDER}/${APP_NAME}-${GOOS}-${GOARCH} ${MODULE_NAME}/cmd/${APP_NAME}
-	@echo "${GREEN}build success" `ls ./${BIN_FOLDER}/${APP_NAME}-${GOOS}-${GOARCH}` "!${NC}"
+build:
+	CGO_ENABLED=1 go build -tags static -ldflags "-s -w" ./...
 
 ## -- Dev context --
 
 ## Update the generated resources
-## should generate or update mocks
+## should generate / update the mocks and documentations in markdown format
 .PHONY: update
 update:
 	GOMODLOCATION=$$PWD go generate ./...
@@ -152,26 +130,6 @@ godoc: --create-tmp-folders
 	@echo "\tTo turn off serveur execute '${RED}kill ${pid}${NC}'"
 	@echo ${pid} >> ${IGNORED_FOLDER}/${GODOC_PROCESS}
 	@echo "pid save in ${IGNORED_FOLDER}/${GODOC_PROCESS}"
-
-## Generate the openapi for each command inside the cmd folder
-## the command need to have an openapi.go file inside the main context, else the
-## the command should skipped.
-## the process will generate the vendor folder which will removed by the 'clean' rule.
-.PHONY: swag
-swag: $(shell ls -d cmd/* | sed -e 's/cmd\//swag./')
-	@rm -rf ${VENDOR_FOLDER}
-
-## Run the swag generation for the specific command with 'swag.<cmd_name>'
-## <cmd_name> should match with the specific folder name inside the cmd folder
-## check the swag rule to have the specific behavior about the swag process
-.PHONY: swag.%
-swag.%:
-	$(eval APP_NAME := $*)
-	@go mod vendor
-	@if [ -f "cmd/${APP_NAME}/openapi.go" ]; then \
-		swag init -o "cmd/${APP_NAME}/docs" -g "cmd/${APP_NAME}/openapi.go" \
-			--exclude "vendor/github.com/DataDog" --parseVendor "true"; \
-	fi
 
 ## -- Other commands --
 
@@ -188,7 +146,7 @@ clean:
 ## call [clean]
 .PHONY: fclean
 fclean: clean
-	rm -rf ${BIN_FOLDER}
+	@
 
 # Private rules
 

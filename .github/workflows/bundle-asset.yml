@@ -27,9 +27,10 @@ jobs:
       - name: Get tag
         id: get_tag
         run: |
-          cat CHANGELOG.txt | grep "##" | sed 's/## //g' > TAG
+          cat CHANGELOG.md | grep "##" | sed 's/## //g' > TAG
           echo "RELEASE_TAG=$(cat TAG)" >> $GITHUB_ENV
       - name: Release
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,4 +41,4 @@ jobs:
           files: |
             ${{ github.workspace }}/app-codesystem.zip
             ${{ github.workspace }}/lib-codesystem.zip
-          body_path: CHANGELOG.txt
+          body_path: CHANGELOG.md

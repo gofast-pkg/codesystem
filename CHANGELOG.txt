@@ -1,7 +1,0 @@
-# CHANGELOG
-
-## v0.0.9
-
-- renaming git actions files
-- clean commit(s) repository
-- remove useless comments
