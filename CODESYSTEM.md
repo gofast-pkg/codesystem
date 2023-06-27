@@ -87,11 +87,37 @@ help:                         List available rules to this project
 
 ## lib
 
-N/A
-
 ### Makefile (lib)
 
-N/A
+Same information about [app](#makefile-for-applications) except they are not command building with dynamic rules.
+
+### .github
+
+Provide a powerfull ci to check code quality, test, build source code and release the pkg
+
+#### ci.yml
+
+For the unit tests, this ci use the [codecov service](https://about.codecov.io/) and need to setup your repository to work properly. It seems important for a public repository to give a good coverage.
+
+#### release.yml
+
+The release action, create a new release if the code was merge in the `main branch`. To work, you need keep a `CHANGELOG.md` file in the root repository with this criterias:
+
+- subtitle with double '#' and [semver versionning](https://semver.org/)
+- a content release with an unordered list
+- replace the content for each release (history is keeping in old release)
+
+Example CHANGELOG.md file:
+
+``` markdown
+# CHANGELOG
+
+## v0.0.9
+
+- renaming git actions files
+- clean commit(s) repository
+- remove useless comments
+```
 
 ## common
 
