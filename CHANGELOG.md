@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.1.1
+## v0.1.2
 
-- update the bundle asset git action to get all files in the scoped folder (lib, app and common)
+- renaming golangci.yaml to .golangci.yaml (common)
