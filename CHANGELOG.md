@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.1.2
+## v0.1.3
 
-- renaming golangci.yaml to .golangci.yaml (common)
+- configure the linter criterias
