@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Check codesystem
-      uses: gofast-pkg/codesystem
+      uses: gofast-pkg/codesystem@main
       with:
         type: 'lib'
         context: '.'
