@@ -1,5 +1,6 @@
 # CHANGELOG
 
-## v0.1.3
+## v0.1.4
 
-- configure the linter criterias
+- fix link documentation
+- fix git action ref
