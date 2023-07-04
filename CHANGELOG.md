@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.1.3
+## v0.1.5
 
-- configure the linter criterias
+- update golangci lint configuration
