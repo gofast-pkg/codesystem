@@ -128,4 +128,4 @@ Classic configuration
 ### golangci.yaml
 
 The golangci.yaml is a configuration to have a beautifull and logic code style. It's open to purpose.
-No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/golangci.yaml), all informations on each choice are documented.
+No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/.golangci.yaml), all informations on each choice are documented.
