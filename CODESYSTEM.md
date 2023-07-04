@@ -123,9 +123,55 @@ Example CHANGELOG.md file:
 
 ### .mockery.yaml
 
-Classic configuration
+#### Configuration
+
+``` yaml
+# create the mock out of the root package (could to have module_name/mocks/your_mock.go)
+inpackage: False
+# create mock without the suffix `_test` package name
+testonly: False
+# create expector for your mocked interface
+with-expecter: True
+# keep tree of your project to avoid conflict between identical interface name from different subpackage
+keeptree: True
+# could import mock from an other package
+exported: True
+```
+
+#### How generate your mocks
+
+The make rule `update` invoque all //go:generate directive. It's better to prefer use this directive to generate your mocks for these benefits:
+
+- custom mock generation for your execptions
+- avoid to parse all interfaces from your project
+- write in the code your needs explicitly
+
+Example to generate mock for these `Reader` interface:
+
+``` golang
+//go:generate mockery --name=Reader --output=mocks --filename=reader.go --outpkg=mocks
+type Reader interface {
+  // several function prototypes
+}
+```
+
+this directive should generate your mock with the pathfile `your_module/mocks/reader.go` and keep the package name `mocks`
 
 ### golangci.yaml
 
 The golangci.yaml is a configuration to have a beautifull and logic code style. It's open to purpose.
 No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/.golangci.yaml), all informations on each choice are documented.
+
+This setup help you to have a minimum grade of `A` from [Codebeat](https://codebeat.co/) and [Go Report Card](https://goreportcard.com/) !
+
+### Community Standars
+
+You will find inside the common/.github folder the community standars files to have a beautifull open source repository:
+
+- CODE_OF_CONDUCT.md
+- CONTRIBUTING.md
+- SECURITY.md
+- ISSUE_TEMPLATE/bug_report.md - feature_request.md
+- PULL_REQUEST_TEMPLATE.md
+
+Licence are not provided because it's defined by your policy

@@ -4,6 +4,7 @@
 ![Git action test](https://github.com/gofast-pkg/codesystem/actions/workflows/test-gitaction.yml/badge.svg)
 [![Marketplace](https://img.shields.io/badge/git%20action-marketplace-informational?style=flat-square)](https://github.com/marketplace/actions/codesystem-checker)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/gofast-pkg/codesystem/blob/main/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem?ref=badge_shield)
 
 Code system define a set of resources for manage Golang applications and libraries with a common configuration files like Makefile, golangci.yml ...
 
@@ -119,16 +120,7 @@ rm app-codesystem.zip
 
 &nbsp;:grey_exclamation:&nbsp; Use issues for everything
 
-- For a small change, just send a PR.
-- For bigger changes open an issue for discussion before sending a PR.
-- PR should have:
-  - Test case
-  - Documentation
-  - Example (If it makes sense)
-- You can also contribute by:
-  - Reporting issues
-  - Suggesting new features or enhancements
-  - Improve/fix documentation
+Read more informations with the [CONTRIBUTING_GUIDE](./.github/CONTRIBUTING.md)
 
 For all changes, please update the CHANGELOG.txt file by replacing the existant content.
 
@@ -143,3 +135,5 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## Licence
 
 [MIT](https://github.com/gofast-pkg/codesystem/blob/main/LICENSE)
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem?ref=badge_large)
