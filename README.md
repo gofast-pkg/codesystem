@@ -4,6 +4,7 @@
 ![Git action test](https://github.com/gofast-pkg/codesystem/actions/workflows/test-gitaction.yml/badge.svg)
 [![Marketplace](https://img.shields.io/badge/git%20action-marketplace-informational?style=flat-square)](https://github.com/marketplace/actions/codesystem-checker)
 [![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://raw.githubusercontent.com/gofast-pkg/codesystem/blob/main/LICENSE)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem?ref=badge_shield)
 
 Code system define a set of resources for manage Golang applications and libraries with a common configuration files like Makefile, golangci.yml ...
 
@@ -143,3 +144,5 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## Licence
 
 [MIT](https://github.com/gofast-pkg/codesystem/blob/main/LICENSE)
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgofast-pkg%2Fcodesystem?ref=badge_large)
