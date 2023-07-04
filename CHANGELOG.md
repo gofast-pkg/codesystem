@@ -1,6 +1,5 @@
 # CHANGELOG
 
-## v0.1.4
+## v0.1.5
 
-- fix link documentation
-- fix git action ref
+- update golangci lint configuration

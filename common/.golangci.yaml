@@ -145,6 +145,8 @@ issues:
     - path: _test\.go
       linters:
         - dupl
+        - gocognit
+        - gocyclo
     - source: "^//go:generate "
       linters:
         - lll
