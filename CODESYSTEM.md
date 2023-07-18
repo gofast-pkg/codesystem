@@ -157,12 +157,18 @@ type Reader interface {
 
 this directive should generate your mock with the pathfile `your_module/mocks/reader.go` and keep the package name `mocks`
 
-### golangci.yaml
+### .golangci.yaml
 
 The golangci.yaml is a configuration to have a beautifull and logic code style. It's open to purpose.
 No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/.golangci.yaml), all informations on each choice are documented.
 
 This setup help you to have a minimum grade of `A` from [Codebeat](https://codebeat.co/) and [Go Report Card](https://goreportcard.com/) !
+
+### .gitignore
+
+Exclude environment files, binaries, generated files from Make rule(s) ...
+
+Ignore residual stuff for the Go environment.
 
 ### Community Standars
 

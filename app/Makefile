@@ -11,6 +11,13 @@ BENCHREPORT_FILE=bench_report.txt
 GODOC_PROCESS=godoc_process.txt
 LINTER_VERSION=v1.53.3
 SWAGGO_VERSION=v1.8.12
+# SWAGGER_SOURCE_DEPENDENCIES allow to include source files that have swaggo/swag annotations
+# Values should be start by a comma and should separated by comma
+# Example:
+# SWAGGER_SOURCE_DEPENDENCIES=,vendor/github.com/gofast-pkg/api,other_dependency
+# Define this VAR in your $PATH_INCLUDED_MAKEFILE for override the default value
+# and keep the synchronization with the codesystem
+SWAGGER_SOURCE_DEPENDENCIES=
 MOCKERY_VERSION=v2.30.1
 MODULE_NAME := $(shell go list -m)
 
