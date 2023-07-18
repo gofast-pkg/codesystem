@@ -1,6 +1,5 @@
 # CHANGELOG
 
-## v0.2.0
+## v0.2.1
 
-- implement common .gitignore
-- improve app/Makefile for swagger generation
+- fix app/Makefile for swagger generation from dependencies
