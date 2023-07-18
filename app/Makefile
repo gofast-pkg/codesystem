@@ -176,8 +176,8 @@ swag.%:
 	$(eval APP_NAME := $*)
 	@go mod vendor
 	@if [ -f "cmd/${APP_NAME}/openapi.go" ]; then \
-		swag init -o "cmd/${APP_NAME}/docs" -g "cmd/${APP_NAME}/openapi.go" \
-			--exclude "vendor/github.com/DataDog" --parseVendor "true"; \
+		swag init -o "cmd/${APP_NAME}/docs" -g "openapi.go" \
+			--dir cmd/${APP_NAME}${SWAGGER_SOURCE_DEPENDENCIES} ; \
 	fi
 
 ## -- Other commands --
