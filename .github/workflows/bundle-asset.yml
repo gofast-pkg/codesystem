@@ -15,12 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: create zip for application files
-        uses: vimtor/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         with:
           files: common/ app/
           dest: app-codesystem.zip
       - name: create zip for libraries files
-        uses: vimtor/action-zip@v1
+        uses: vimtor/action-zip@v1.1
         with:
           files: common/ lib/ 
           dest: lib-codesystem.zip

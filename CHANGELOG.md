@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.2.1
+## v0.2.2
 
-- fix app/Makefile for swagger generation from dependencies
+- upgrade vimtor/action-zip to remove node12 deprecated warning by node16
