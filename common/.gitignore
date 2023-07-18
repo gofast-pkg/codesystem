@@ -1,0 +1,19 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output go command
+*.test
+*.out
+
+# Codesystem files
+bin/
+vendor/
+.ignore/
+*.env
+
+# Go workspace file
+go.work
