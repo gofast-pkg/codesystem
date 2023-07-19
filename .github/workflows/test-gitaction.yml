@@ -3,7 +3,7 @@ name: codesystem-checker
 
 on:
   workflow_run:
-    workflows: ["assets"]
+    workflows: ["Bundle assets"]
     types:
       - completed
 

@@ -32,6 +32,8 @@ init()
 	shopt -s dotglob
 	folder_browser $MAIN_FOLDER
 	echo "files are verified"
+
+	exit 0
 }
 
 # is_ignored check if the target is in the ignored files list
