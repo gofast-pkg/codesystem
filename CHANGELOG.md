@@ -1,5 +1,8 @@
 # CHANGELOG
 
-## v0.2.2
+## v0.3.0
 
-- upgrade vimtor/action-zip to remove node12 deprecated warning by node16
+- Implement ci for application project
+- Refact lib ci for matching with app(s)
+- Improve documentation
+- Fix benchmark report flag
