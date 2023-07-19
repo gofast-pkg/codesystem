@@ -1,8 +1,6 @@
 # CHANGELOG
 
-## v0.3.0
+## v0.3.1
 
-- Implement ci for application project
-- Refact lib ci for matching with app(s)
-- Improve documentation
-- Fix benchmark report flag
+- Fix branch target for the codesystem checker
+- Update the git action tester
