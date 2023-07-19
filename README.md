@@ -38,7 +38,7 @@ Read the next for Github action details.
 
 ### Environment variable
 
-`CODESYSTEM_IGNORED_FILES`, optionnal enviornment variable to skip the validation of folder(s) and or files(s). Value is a string with one or more element separated by space character.
+`CODESYSTEM_IGNORED_FILES`, optionnal environment variable to skip the validation of folder(s) and or files(s). Value is a string with one or more element separated by space character.
 
 Example: CODESYTEM_IGNORED_FILES=".github Makefile"
 
