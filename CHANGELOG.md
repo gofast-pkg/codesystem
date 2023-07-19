@@ -1,6 +1,5 @@
 # CHANGELOG
 
-## v0.3.1
+## v0.3.2
 
-- Fix branch target for the codesystem checker
-- Update the git action tester
+- Split codesystem for app and lib

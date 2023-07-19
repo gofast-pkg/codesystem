@@ -163,6 +163,8 @@ codesystem is step for checking if your files are up to date from the last versi
 
 [more information](https://github.com/gofast-pkg/codesystem/tree/main/README.md#environment-variable)
 
+codesytem is duplicated in app and in pkg because the options are different.
+
 ### .golangci.yaml
 
 The golangci.yaml is a configuration to have a beautifull and logic code style. It's open to purpose.
