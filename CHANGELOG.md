@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.3.3
+## v0.3.4
 
-- Fix incorrect path
+- Remove useless file
