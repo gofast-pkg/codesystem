@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.3.2
+## v0.3.3
 
-- Split codesystem for app and lib
+- Fix incorrect path
