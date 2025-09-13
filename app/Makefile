@@ -9,7 +9,7 @@ COVERAGE_FILE=coverage.txt
 TESTREPORT_FILE=test_report.txt
 BENCHREPORT_FILE=bench_report.txt
 GODOC_PROCESS=godoc_process.txt
-LINTER_VERSION=v1.53.3
+LINTER_VERSION=v2.4.0
 SWAGGO_VERSION=v1.8.12
 # SWAGGER_SOURCE_DEPENDENCIES allow to include source files that have swaggo/swag annotations
 # Values should be start by a comma and should separated by comma
@@ -59,7 +59,7 @@ ci-tool:
 	@VERSION=$(shell golangci-lint version 2>/dev/null | sed -rn "s/.* (v[0-9]+.[0-9]+.[0-9]+) .*$$/\1/p"); \
 	if [ $$VERSION+"x" != ${LINTER_VERSION}+"x" ]; then \
 		echo "golangci-lint installation (${LINTER_VERSION})"; \
-		go install github.com/golangci/golangci-lint/cmd/golangci-lint@${LINTER_VERSION}; \
+		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b ${GOPATH}/bin ${LINTER_VERSION}; \
 		golangci-lint version; \
 	fi
 
@@ -93,7 +93,7 @@ dep:
 ## call ci-tool
 .PHONY: lint
 lint: ci-tool
-	golangci-lint run --skip-dirs mocks --skip-files "(^.+)mock_test.go"
+	golangci-lint run
 
 ## Run the tests suite
 ## call [utest, bench]

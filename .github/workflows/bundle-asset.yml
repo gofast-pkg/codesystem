@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: create zip for application files
         uses: vimtor/action-zip@v1.1
         with:
@@ -31,7 +31,7 @@ jobs:
           echo "RELEASE_TAG=$(cat TAG)" >> $GITHUB_ENV
       - name: Release
         if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
