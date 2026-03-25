@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.2
+
+- Revert node version env to setup them in the scope of the repo.
+
 ## v0.4.1
 
 - Update node version use in git action
