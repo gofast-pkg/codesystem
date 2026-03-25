@@ -40,8 +40,6 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: "${{ env.RELEASE_TAG }}"
