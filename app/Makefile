@@ -79,8 +79,8 @@ tool: ci-tool
 	@VERSION=$(shell mockery --version --quiet 2>/dev/null | sed -rn "s/.*(v[0-9]+.[0-9]+.[0-9]+)$$/\1/p"); \
 	if [ $$VERSION+"x" != ${MOCKERY_VERSION}+"x" ]; then \
 		echo "mockery installation (${MOCKERY_VERSION})"; \
-		go install github.com/vektra/mockery/v2/...@${MOCKERY_VERSION}; \
-		mockery --version --quiet; \
+		go install github.com/vektra/mockery/v3@${MOCKERY_VERSION}; \
+		mockery version; \
 	fi
 	@VERSION=$(shell swag --version 2>/dev/null | sed -rn "s/.* (v[0-9]+.[0-9]+.[0-9]+)$$/\1/p"); \
 	if [ $$VERSION+"x" != ${SWAGGO_VERSION}+"x" ]; then \
@@ -155,6 +155,7 @@ build.%:
 .PHONY: update
 update:
 	GOMODLOCATION=$$PWD go generate ./...
+	mockery
 
 ## Run a Go documentation server
 .PHONY: godoc

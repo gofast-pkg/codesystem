@@ -1,25 +1,11 @@
 # CHANGELOG
 
-## v0.4.3
+## v0.4.4
 
-- Fix chmod for execute script.sh
-
-## v0.4.2
-
-- Revert node version env to setup them in the scope of the repo.
-
-## v0.4.1
-
-- Update node version use in git action
-
-## v0.4.0
-
+- Fix mockery implementation.
+- Update mockery from v2 to v3.
 - Add new codesystem-checker in release bundle.
 - Add new make rules to update and check codesystem.
 - Update dependencies.
 - Update git actions.
 - Update README.md
-
-## v0.3.4
-
-- Remove useless file
