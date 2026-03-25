@@ -198,6 +198,7 @@ codesystem:
 codesystem-check:
 	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM_CHECKER} && \
 	unzip -q ${CODESYSTEM_CHECKER}
+	chmod +x ${CODESYSTEM_CHECKER_SH}
 	@./${CODESYSTEM_CHECKER_SH} app .
 
 ## Cleanup the temporary resources

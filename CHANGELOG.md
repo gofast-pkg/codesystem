@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.3
+
+- Fix chmod for execute script.sh
+
 ## v0.4.2
 
 - Revert node version env to setup them in the scope of the repo.
