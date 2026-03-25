@@ -161,10 +161,10 @@ clean:
 	fi
 	rm -rf ${IGNORED_FOLDER}
 	rm -rf ${VENDOR_FOLDER}
-	rm ${CODESYSTEM}
-	rm ${CODESYSTEM_CHECKER}
+	rm -f ${CODESYSTEM}
+	rm -f ${CODESYSTEM_CHECKER}
 	rm -rf ${CODESYSTEM_VERIFIED_FILES}
-	rm ${CODESYSTEM_CHECKER_SH}
+	rm -f ${CODESYSTEM_CHECKER_SH}
 
 ## Reset the project to the initial state
 ## call [clean]
