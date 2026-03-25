@@ -14,20 +14,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Renaming file(s)
+        run: cp entrypoint.sh cs-checker.sh
       - name: create zip for application files
-        uses: vimtor/action-zip@v1.1
+        uses: vimtor/action-zip@v1.3
         with:
           files: common/ app/
           dest: app-codesystem.zip
       - name: create zip for libraries files
-        uses: vimtor/action-zip@v1.1
+        uses: vimtor/action-zip@v1.3
         with:
           files: common/ lib/ 
           dest: lib-codesystem.zip
+      - name: create zip for codesystem-checker
+        uses: vimtor/action-zip@v1.3
+        with:
+          files: cs-checker.sh
+          dest: codesystem-checker.zip
       - name: Get tag
         id: get_tag
         run: |
-          cat CHANGELOG.md | grep "##" | sed 's/## //g' > TAG
+          sed -n 's/^## //p' CHANGELOG.md | head -n 1 > TAG
           echo "RELEASE_TAG=$(cat TAG)" >> $GITHUB_ENV
       - name: Release
         if: github.ref == 'refs/heads/main'
@@ -39,6 +46,7 @@ jobs:
           prerelease: false
           draft: false
           files: |
+            ${{ github.workspace }}/codesystem-checker.zip
             ${{ github.workspace }}/app-codesystem.zip
             ${{ github.workspace }}/lib-codesystem.zip
           body_path: CHANGELOG.md

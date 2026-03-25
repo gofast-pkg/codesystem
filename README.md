@@ -68,7 +68,7 @@ jobs:
 
 ## Install or update
 
-From your repository execute the following command:
+If it's the first time with Codesystem in your repository, execute the following command:
 
 ``` bash
 # For the applications repositories
@@ -86,34 +86,33 @@ unzip -q lib-codesystem.zip && \
 rm lib-codesystem.zip
 ```
 
-If you want test which files ares up to date, you can download and run the `entrypoint.sh` localy
+If you have already install Codesystem in your repository, you can execute the following command:
 
 ``` bash
-# For the applications repositories
-./entrypoint.sh app .
-> check .mockery.yaml
-> check Makefile
-> check golangci.yaml
-> files are verified
+# For both applications and libs:
+make codesystem
+# To remove downloaded files:
+make clean
 ```
 
+If you want test which files ares up to date, you can execute the following command:
+
 ``` bash
-# For the applications repositories
-./entrypoint.sh lib .
-> check .mockery.yaml
-> check Makefile
-> check golangci.yaml
-> files are verified
+# For both applications and libs:
+make codesystem-check
+# To remove downloaded files:
+make clean
 ```
 
 You can ignore check of some folders and or files with adding CODESYSTEM_IGNORED_FILES environment variables. [more detail](#environment-variable)
 
-&nbsp;:grey_exclamation:&nbsp; the zip package will download files and create a folder, don't forget to cleanup
+&nbsp;:grey_exclamation:&nbsp; the manuals process will download files and create a folders, don't forget to remove them.
 
 ``` bash
 rm -rf verified_files
 rm lib-codesystem.zip
 rm app-codesystem.zip
+rm codesystem-checker.zip
 ```
 
 ## Contributing
