@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.4.1
+
+- Update node version use in git action
+
 ## v0.4.0
 
 - Add new codesystem-checker in release bundle.
