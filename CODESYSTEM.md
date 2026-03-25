@@ -39,6 +39,12 @@ If you need override values, rules or just add something, it's better to create 
 
 ``` bash
 Usage of Makefile:
+
+
+                              Do not edit, override or improve this Makefile with editing the included Makefile
+                              inside resources/Makefile
+
+
                               -- CI context --
 
 all:                          Run the ci rules
@@ -56,29 +62,18 @@ tests:                        Run the tests suite
                               call [utest, bench]
 utest:                        Run unit tests and generate coverage file
 bench:                        Run benchmarks
-build:                        Run the build for all commands inside the cmd folder
-                              the default GOOS and GOARCH are used.
-                              generate the binaries inside a 'bin' folder.
-                              the binaries generated should take the name with <cmd_name>-<GOOS>-<GOARCH>
-build.%: (dynamic rule)       Run the build for the specific command with 'build.<cmd_name>'
-                              <cmd_name> should match with the specific folder name inside the cmd folder
-                              check the build rule to have the specific behavior about the build
+build:                        Build packages
 
                               -- Dev context --
 
 update:                       Update the generated resources
-                              should generate or update mocks
+                              should generate / update the mocks and documentations in markdown format
 godoc:                        Run a Go documentation server
-swag:                         Generate the openapi for each command inside the cmd folder
-                              the command need to have an openapi.go file inside the main context, else the
-                              the command should skipped.
-                              the process will generate the vendor folder which will removed by the 'clean' rule.
-swag.%: (dynamic rule)        Run the swag generation for the specific command with 'swag.<cmd_name>'
-                              <cmd_name> should match with the specific folder name inside the cmd folder
-                              check the swag rule to have the specific behavior about the swag process
 
                               -- Other commands --
 
+codesystem:                   Codesystem update
+codesystem-check:             Codesystem verify
 clean:                        Cleanup the temporary resources
 fclean:                       Reset the project to the initial state
                               call [clean]
@@ -98,36 +93,49 @@ Same information about [app](#makefile-for-applications) except they are not com
 #### Configuration
 
 ``` yaml
-# create the mock out of the root package (could to have module_name/mocks/your_mock.go)
-inpackage: False
-# create mock without the suffix `_test` package name
-testonly: False
-# create expector for your mocked interface
-with-expecter: True
-# keep tree of your project to avoid conflict between identical interface name from different subpackage
-keeptree: True
-# could import mock from an other package
-exported: True
+all: false
+dir: '{{.InterfaceDirRelative}}/mocks'
+filename: 'mock_{{.InterfaceName}}.go'
+force-file-write: true
+formatter: goimports
+formatter-options:
+  goimports:
+    all-errors: false
+    comments: true
+    format-only: true
+    fragment: false
+    local-prefix: ""
+    tab-indent: true
+    tab-width: 8
+generate: true
+include-auto-generated: false
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: 'mocks'
+recursive: true
+require-template-schema-exists: true
+template: testify
+template-schema: '{{.Template}}.schema.json'
+packages:
+  .:
+    config:
+      all: false
 ```
 
 #### How generate your mocks
 
-The make rule `update` invoque all //go:generate directive. It's better to prefer use this directive to generate your mocks for these benefits:
-
-- custom mock generation for your execptions
-- avoid to parse all interfaces from your project
-- write in the code your needs explicitly
+The make rule `update` invoque all //go:generate directive and invoke `mockery`.
 
 Example to generate mock for these `Reader` interface:
 
 ``` golang
-//go:generate mockery --name=Reader --output=mocks --filename=reader.go --outpkg=mocks
+//mockery:generate: true
 type Reader interface {
   // several function prototypes
 }
 ```
 
-this directive should generate your mock with the pathfile `your_module/mocks/reader.go` and keep the package name `mocks`
+this directive should generate your mock with the pathfile `your_module/mocks/mock_Reader.go`, in the package name `mocks` and interface Name `MockReader`.
 
 ### .github
 
@@ -165,10 +173,10 @@ codesystem is step for checking if your files are up to date from the last versi
 
 codesytem is duplicated in app and in pkg because the options are different.
 
-### .golangci.yaml
+### .golangci.yml
 
-The golangci.yaml is a configuration to have a beautifull and logic code style. It's open to purpose.
-No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/.golangci.yaml), all informations on each choice are documented.
+The golangci.yml is a configuration to have a beautifull and logic code style. It's open to purpose.
+No big comments here, the best it to read the [file directly](https://github.com/gofast-pkg/codesystem/tree/main/common/.golangci.yml), all informations on each choice are documented.
 
 This setup help you to have a minimum grade of `A` from [Codebeat](https://codebeat.co/) and [Go Report Card](https://goreportcard.com/) !
 
