@@ -9,9 +9,14 @@ COVERAGE_FILE=coverage.txt
 TESTREPORT_FILE=test_report.txt
 BENCHREPORT_FILE=bench_report.txt
 GODOC_PROCESS=godoc_process.txt
-LINTER_VERSION=v2.4.0
-MOCKERY_VERSION=v2.30.1
+LINTER_VERSION=v2.11.4
+MOCKERY_VERSION=v3.7.0
 MODULE_NAME := $(shell go list -m)
+# CODESYSTEM UPDATER
+CODESYSTEM=lib-codesystem.zip
+CODESYSTEM_CHECKER=codesystem-checker.zip
+CODESYSTEM_VERIFIED_FILES=verified_files
+CODESYSTEM_CHECKER_SH=cs-checker.sh
 
 # Global colors for output
 BLUE=\033[0;34m
@@ -133,6 +138,19 @@ godoc: --create-tmp-folders
 
 ## -- Other commands --
 
+## Codesystem update
+.PHONY: codesystem
+codesystem:
+	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM} && \
+	unzip -q ${CODESYSTEM}
+
+## Codesystem verify
+.PHONY: codesystem-check
+codesystem-check:
+	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM_CHECKER} && \
+	unzip -q ${CODESYSTEM_CHECKER}
+	@./${CODESYSTEM_CHECKER_SH} app .
+
 ## Cleanup the temporary resources
 .PHONY: clean
 clean:
@@ -141,6 +159,10 @@ clean:
 	fi
 	rm -rf ${IGNORED_FOLDER}
 	rm -rf ${VENDOR_FOLDER}
+	rm ${CODESYSTEM}
+	rm ${CODESYSTEM_CHECKER}
+	rm -rf ${CODESYSTEM_VERIFIED_FILES}
+	rm ${CODESYSTEM_CHECKER_SH}
 
 ## Reset the project to the initial state
 ## call [clean]

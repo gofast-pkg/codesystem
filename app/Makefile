@@ -9,8 +9,8 @@ COVERAGE_FILE=coverage.txt
 TESTREPORT_FILE=test_report.txt
 BENCHREPORT_FILE=bench_report.txt
 GODOC_PROCESS=godoc_process.txt
-LINTER_VERSION=v2.4.0
-SWAGGO_VERSION=v1.8.12
+LINTER_VERSION=v2.11.4
+SWAGGO_VERSION=v2.0.0-rc5
 # SWAGGER_SOURCE_DEPENDENCIES allow to include source files that have swaggo/swag annotations
 # Values should be start by a comma and should separated by comma
 # Example:
@@ -18,8 +18,13 @@ SWAGGO_VERSION=v1.8.12
 # Define this VAR in your $PATH_INCLUDED_MAKEFILE for override the default value
 # and keep the synchronization with the codesystem
 SWAGGER_SOURCE_DEPENDENCIES=
-MOCKERY_VERSION=v2.30.1
+MOCKERY_VERSION=v3.7.0
 MODULE_NAME := $(shell go list -m)
+# CODESYSTEM UPDATER
+CODESYSTEM=app-codesystem.zip
+CODESYSTEM_CHECKER=codesystem-checker.zip
+CODESYSTEM_VERIFIED_FILES=verified_files
+CODESYSTEM_CHECKER_SH=cs-checker.sh
 
 # Global colors for output
 BLUE=\033[0;34m
@@ -182,6 +187,19 @@ swag.%:
 
 ## -- Other commands --
 
+## Codesystem update
+.PHONY: codesystem
+codesystem:
+	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM} && \
+	unzip -q ${CODESYSTEM}
+
+## Codesystem verify
+.PHONY: codesystem-check
+codesystem-check:
+	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM_CHECKER} && \
+	unzip -q ${CODESYSTEM_CHECKER}
+	@./${CODESYSTEM_CHECKER_SH} app .
+
 ## Cleanup the temporary resources
 .PHONY: clean
 clean:
@@ -190,6 +208,10 @@ clean:
 	fi
 	rm -rf ${IGNORED_FOLDER}
 	rm -rf ${VENDOR_FOLDER}
+	rm ${CODESYSTEM}
+	rm ${CODESYSTEM_CHECKER}
+	rm -rf ${CODESYSTEM_VERIFIED_FILES}
+	rm ${CODESYSTEM_CHECKER_SH}
 
 ## Reset the project to the initial state
 ## call [clean]
