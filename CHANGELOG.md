@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## v0.4.7
+## v0.4.8
 
 - Update README badge
 - Update the golangci-lint conf
