@@ -52,27 +52,26 @@ all: ci-tool dep lint tests build
 ## - golangci-lint
 .PHONY: ci-tool
 ci-tool:
-# add +"x" in the if statement because if command is not installed VERSION should empty and will cause a syntax error
-	@VERSION=$(shell golangci-lint version 2>/dev/null | sed -rn "s/.* (v[0-9]+.[0-9]+.[0-9]+) .*$$/\1/p"); \
-	if [ $$VERSION+"x" != ${LINTER_VERSION}+"x" ]; then \
-		echo "golangci-lint installation (${LINTER_VERSION})"; \
-		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b ${GOPATH}/bin ${LINTER_VERSION}; \
+	@VERSION=$$(golangci-lint version --short 2>/dev/null); \
+	if [ "v$$VERSION" != ${LINTER_VERSION} ]; then \
+		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin ${LINTER_VERSION}; \
 		golangci-lint version; \
+	else \
+		echo "golangci-lint already installed (current: v$$VERSION, expected: ${LINTER_VERSION})"; \
 	fi
 
 ## Install tool needs for the development project after calling the ci-tool rule
 ## - mockery
-## - swaggo
 ## - golang.org/x/tools dependencies
 .PHONY: tool
 tool: ci-tool
-	@echo "golang.org/x/tools update ..."
-	go install golang.org/x/tools/...@latest
-	@VERSION=$(shell mockery --version --quiet 2>/dev/null | sed -rn "s/.*(v[0-9]+.[0-9]+.[0-9]+)$$/\1/p"); \
-	if [ $$VERSION+"x" != ${MOCKERY_VERSION}+"x" ]; then \
-		echo "mockery installation (${MOCKERY_VERSION})"; \
+	@go install golang.org/x/tools/...@latest
+	@VERSION=$$(mockery version 2>/dev/null); \
+	if [ $$VERSION != ${MOCKERY_VERSION} ]; then \
 		go install github.com/vektra/mockery/v3@${MOCKERY_VERSION}; \
 		mockery version; \
+	else \
+		echo "mockery already installed (current: $$VERSION, expected: ${MOCKERY_VERSION})"; \
 	fi
 
 ## Install dependencies
