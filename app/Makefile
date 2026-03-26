@@ -62,7 +62,7 @@ all: ci-tool dep lint tests build
 ci-tool:
 	@VERSION=$$(golangci-lint version --short 2>/dev/null); \
 	if [ "v$$VERSION" != ${LINTER_VERSION} ]; then \
-		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $(go env GOPATH)/bin ${LINTER_VERSION}; \
+		curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b $$(go env GOPATH)/bin ${LINTER_VERSION}; \
 		golangci-lint version; \
 	else \
 		echo "golangci-lint already installed (current: v$$VERSION, expected: ${LINTER_VERSION})"; \
