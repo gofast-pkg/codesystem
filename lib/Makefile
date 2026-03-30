@@ -17,6 +17,12 @@ CODESYSTEM=lib-codesystem.zip
 CODESYSTEM_CHECKER=codesystem-checker.zip
 CODESYSTEM_VERIFIED_FILES=verified_files
 CODESYSTEM_CHECKER_SH=cs-checker.sh
+# CODESYSTEM_IGNORED_FILES to skip some checks separated by space.
+# Example:
+# CODESYSTEM_IGNORED_FILES=.mockery.yml .golangci.yml
+# Define this VAR in your $PATH_INCLUDED_MAKEFILE for override the default value
+# and keep the synchronization with the codesystem
+CODESYSTEM_IGNORED_FILES=
 
 # Global colors for output
 BLUE=\033[0;34m
@@ -64,7 +70,7 @@ ci-tool:
 ## - mockery
 ## - golang.org/x/tools dependencies
 .PHONY: tool
-tool: ci-tool
+tool:: ci-tool
 	@go install golang.org/x/tools/...@latest
 	@VERSION=$$(mockery version 2>/dev/null); \
 	if [ $$VERSION != ${MOCKERY_VERSION} ]; then \
@@ -122,8 +128,11 @@ build:
 
 ## Update the generated resources
 ## should generate / update the mocks and documentations in markdown format
+## Update the dependencies (go.mod)
+## Update codesystem
 .PHONY: update
-update:
+update:: codesystem
+	go get -u ./...
 	GOMODLOCATION=$$PWD go generate ./...
 	mockery
 
@@ -138,19 +147,13 @@ godoc: --create-tmp-folders
 
 ## -- Other commands --
 
-## Codesystem update
+## Codesystem update.
 .PHONY: codesystem
 codesystem:
-	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM} && \
-	unzip -q ${CODESYSTEM}
-
-## Codesystem verify
-.PHONY: codesystem-check
-codesystem-check:
 	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM_CHECKER} && \
 	unzip -q ${CODESYSTEM_CHECKER}
 	chmod +x ${CODESYSTEM_CHECKER_SH}
-	@./${CODESYSTEM_CHECKER_SH} lib .
+	@CODESYSTEM_IGNORED_FILES=${CODESYSTEM_IGNORED_FILES} ./${CODESYSTEM_CHECKER_SH} lib . --auto-replace
 
 ## Cleanup the temporary resources
 .PHONY: clean

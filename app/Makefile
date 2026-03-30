@@ -25,6 +25,12 @@ CODESYSTEM=app-codesystem.zip
 CODESYSTEM_CHECKER=codesystem-checker.zip
 CODESYSTEM_VERIFIED_FILES=verified_files
 CODESYSTEM_CHECKER_SH=cs-checker.sh
+# CODESYSTEM_IGNORED_FILES to skip some checks separated by space.
+# Example:
+# CODESYSTEM_IGNORED_FILES=.mockery.yml .golangci.yml
+# Define this VAR in your $PATH_INCLUDED_MAKEFILE for override the default value
+# and keep the synchronization with the codesystem
+CODESYSTEM_IGNORED_FILES=
 
 # Global colors for output
 BLUE=\033[0;34m
@@ -73,7 +79,7 @@ ci-tool:
 ## - swaggo
 ## - golang.org/x/tools dependencies
 .PHONY: tool
-tool: ci-tool
+tool:: ci-tool
 	@go install golang.org/x/tools/...@latest
 	@VERSION=$$(mockery version 2>/dev/null); \
 	if [ $$VERSION != ${MOCKERY_VERSION} ]; then \
@@ -147,15 +153,18 @@ build.%:
 	$(eval GOOS := $(shell go env GOOS))
 	$(eval GOARCH := $(shell go env GOARCH))
 	CGO_ENABLED=1 go build -tags static -ldflags "-s -w -X main.appName=${APP_NAME}" \
-		-o ${BIN_FOLDER}/${APP_NAME}-${GOOS}-${GOARCH} ${MODULE_NAME}/cmd/${APP_NAME}
+		-o ${BIN_FOLDER}/${APP_NAME}-${GOOS}-${GOARCH} ./cmd/${APP_NAME}
 	@echo "${GREEN}build success" `ls ./${BIN_FOLDER}/${APP_NAME}-${GOOS}-${GOARCH}` "!${NC}"
 
 ## -- Dev context --
 
 ## Update the generated resources
 ## should generate or update mocks
+## Update the dependencies (go.mod)
+## Update codesystem
 .PHONY: update
-update:
+update:: codesystem
+	go get -u ./...
 	GOMODLOCATION=$$PWD go generate ./...
 	mockery
 
@@ -190,19 +199,13 @@ swag.%:
 
 ## -- Other commands --
 
-## Codesystem update
+## Codesystem update.
 .PHONY: codesystem
 codesystem:
-	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM} && \
-	unzip -q ${CODESYSTEM}
-
-## Codesystem verify
-.PHONY: codesystem-check
-codesystem-check:
 	@curl -LO https://github.com/gofast-pkg/codesystem/releases/latest/download/${CODESYSTEM_CHECKER} && \
 	unzip -q ${CODESYSTEM_CHECKER}
 	chmod +x ${CODESYSTEM_CHECKER_SH}
-	@./${CODESYSTEM_CHECKER_SH} app .
+	@CODESYSTEM_IGNORED_FILES=${CODESYSTEM_IGNORED_FILES} ./${CODESYSTEM_CHECKER_SH} app . --auto-replace
 
 ## Cleanup the temporary resources
 .PHONY: clean
