@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## v0.4.8
+## v0.5.0
 
+- Add dependencies updater (go.mod)
 - Update README badge
 - Update the golangci-lint conf
 - Fix mockery implementation
@@ -12,3 +13,6 @@
 - Update git actions
 - Update README.md
 - Fix tools installation
+- Add extendable Make rule
+- Update .gitignore with editor files.
+- Update ci tests.

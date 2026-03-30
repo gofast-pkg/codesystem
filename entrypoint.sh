@@ -1,123 +1,154 @@
 #!/bin/bash
-# Script codesystem checker to verify the files in the project are up to date
-# You can add CODESYSTEM_IGNORED_FILES environment variable to ignore some files or folders
+# CodeSystem Checker: verify project files are up to date
+# Use CODESYSTEM_IGNORED_FILES environment variable to ignore files/folders
 # Example: CODESYSTEM_IGNORED_FILES="folder1 folder2 file1 file2"
 
-# Type of project: app or lib
-TYPE=$1
-# Context of project to find the files
-CONTEXT=$2
+# -----------------------------
+# Configuration
+# -----------------------------
+TYPE=$1                 # Project type: "app" or "lib"
+CONTEXT=$2              # Project folder to check
+AUTO_REPLACE=$3         # "--auto-replace" to replace differing/missing files
 
-# MAIN_FOLDER describe the folder location to extract the assets files
-MAIN_FOLDER=verified_files
-# URL describe the url to download the assets files
-URL=https://github.com/gofast-pkg/codesystem/releases/latest/download
-# APP_ZIP describe the name of the zip file for app project
-APP_ZIP=app-codesystem.zip
-# LIB_ZIP describe the name of the zip file for lib project
-LIB_ZIP=lib-codesystem.zip
+MAIN_FOLDER="verified_files"
+URL="https://github.com/gofast-pkg/codesystem/releases/latest/download"
+APP_ZIP="app-codesystem.zip"
+LIB_ZIP="lib-codesystem.zip"
+REPLACE=false
 
-# init the folder to extract the assets files
-# download the assets files and install them
-init()
-{
-	local loc_zipname=$1
-	if [ -d "$MAIN_FOLDER" ]; then
-		rm -rf $MAIN_FOLDER
-	fi
-	mkdir $MAIN_FILES
-	# download the zip file and extract it
-	curl -LO $URL/$loc_zipname
-	unzip -q -d $MAIN_FOLDER $loc_zipname
+# -----------------------------
+# Functions
+# -----------------------------
+
+# Initialize local folder and download assets
+init() {
+	local zip_name="$1"
+
+	[ -d "$MAIN_FOLDER" ] && rm -rf "$MAIN_FOLDER"
+	mkdir -p "$MAIN_FOLDER"
+
+	curl -LO "$URL/$zip_name"
+	unzip -q -d "$MAIN_FOLDER" "$zip_name"
+
 	shopt -s dotglob
-	folder_browser $MAIN_FOLDER
-	echo "files are verified"
+	folder_browser "$MAIN_FOLDER"
 
+	echo "All files are verified."
 	exit 0
 }
 
-# is_ignored check if the target is in the ignored files list
-is_ignored()
-{
-	for value in $CODESYSTEM_IGNORED_FILES; do
-		if [ "$value" = "$target" ]; then
-			return 0
-		fi
-	done
+# Check if target file/folder is ignored
+is_ignored() {
+	local target="$1"
 
+	for value in $CODESYSTEM_IGNORED_FILES; do
+		[ "$value" = "$target" ] && return 0
+	done
 	return 1
 }
 
-get_folderpath()
-{
-	FOLDERPATH=$(echo $1 | sed 's/'$MAIN_FOLDER'//g')
-	# remove the first / character if exist
-	if [[ ${FOLDERPATH:0:1} == "/" ]]; then
-		FOLDERPATH=$(echo $FOLDERPATH | sed 's/\///')
-	fi
+# Get folder path relative to MAIN_FOLDER
+get_folderpath() {
+	local input="$1"
+
+	FOLDERPATH="${input#$MAIN_FOLDER}"   # Remove MAIN_FOLDER prefix
+	FOLDERPATH="${FOLDERPATH#/}"         # Remove leading slash if present
+	FOLDERPATH="${FOLDERPATH%/}"         # Remove trailing slash if present
 }
 
-get_filepath()
-{
-	local loc_folderpath=$1
-	local loc_filepath=$2
-	local loc_filename=$(basename $loc_filepath)
+# Get normalized file path
+get_filepath() {
+	local folderpath="$1"
+	local filepath="$2"
+	local filename
+	filename=$(basename "$filepath")
 
-	# test if loc_folderpath is empty
-	if [ -z $loc_folderpath ]; then
-		FILEPATH=$loc_filename
+	if [ -z "$folderpath" ]; then
+		FILEPATH="$filename"
 	else
-		FILEPATH=$loc_folderpath/$loc_filename
+		FILEPATH="$folderpath/$filename"
 	fi
 }
 
-folder_browser()
-{
-	# save the input in the local variable
-	local loc_folder=$1
-	# get the folder path withtout the main folder
-	get_folderpath $loc_folder
-	local loc_folderpath=$FOLDERPATH
-	if is_ignored $loc_folderpath; then
-		echo "skip $loc_folderpath"
+# Recursively check folder contents
+folder_browser() {
+	local folder="$1"
+
+	get_folderpath "$folder"
+	local folderpath="$FOLDERPATH"
+
+	if is_ignored "$folderpath"; then
+		echo "skip $folderpath"
 		return
 	fi
-	for file in $loc_folder/*; do
-		if [ -d $file ]; then
-			folder_browser $file
+
+	for file in "$folder"/*; do
+		[ -d "$file" ] && folder_browser "$file" && continue
+
+		get_filepath "$folderpath" "$file"
+		local filepath="$FILEPATH"
+
+		if is_ignored "$filepath"; then
+			echo "skip $filepath"
 			continue
 		fi
 
-		# normalize the file path to remove the useless / character
-		get_filepath "$loc_folderpath" "$file"
-		local loc_filepath=$FILEPATH
+		# Check if file exists in context
+		if [ ! -f "$CONTEXT/$filepath" ]; then
+			echo "File $filepath not found in $CONTEXT/$filepath"
+			if [ "$REPLACE" = true ]; then
+				cp "$MAIN_FOLDER/$filepath" "$CONTEXT/$filepath"
+				echo "File $filepath added."
+			else
+				exit 1
+			fi
+		fi
 
-		if is_ignored $loc_filepath; then
-			echo "skip $loc_filepath"
-			continue
-		fi
-		# check if file exist
-		if [ ! -f $CONTEXT/$loc_filepath ]; then
-			echo "File $loc_filepath not found in the context $CONTEXT/$loc_filepath"
-			exit 1
-		fi
-		# check if files are different
-		sha_remote=$(shasum $MAIN_FOLDER/$loc_filepath | grep -o -E -e "[0-9a-f]{40}")
-		sha_locate=$(shasum $CONTEXT/$loc_filepath | grep -o -E -e "[0-9a-f]{40}")
-		if [ ! $sha_remote == $sha_locate ]; then
-			echo "File $loc_filepath is different. Replacing..."
-			exit 1
+		# Check if file contents differ
+		sha_remote=$(shasum "$MAIN_FOLDER/$filepath" | awk '{print $1}')
+		sha_local=$(shasum "$CONTEXT/$filepath" | awk '{print $1}')
+
+		if [ "$sha_remote" != "$sha_local" ]; then
+			echo "File $filepath differs."
+			if [ "$REPLACE" = true ]; then
+				cp "$MAIN_FOLDER/$filepath" "$CONTEXT/$filepath"
+				echo "File $filepath replaced."
+			else
+				exit 1
+			fi
 		else
-			echo "File $loc_filepath is up to date"
+			echo "File $filepath is up to date."
 		fi
 	done
 }
 
-if [ "$TYPE" = "app" ]; then
-	init $APP_ZIP
-elif [ "$TYPE" = "lib" ]; then
-	init $LIB_ZIP
-else
-	echo "Invalid type. Please use 'app' or 'lib'."
-	exit 1
+# -----------------------------
+# Main execution
+# -----------------------------
+main() {
+	if [ -z "$CONTEXT" ]; then
+		echo "Context cannot be empty. Usage: ./script.sh 'app|lib' 'context-path' [--auto-replace]"
+		exit 1
+	fi
+
+	if [ "$AUTO_REPLACE" = "--auto-replace" ]; then
+		REPLACE=true
+	elif [ -n "$AUTO_REPLACE" ]; then
+		echo "Unknown option: $AUTO_REPLACE. Only --auto-replace is allowed."
+		exit 1
+	fi
+
+	if [ "$TYPE" = "app" ]; then
+		init "$APP_ZIP"
+	elif [ "$TYPE" = "lib" ]; then
+		init "$LIB_ZIP"
+	else
+		echo "Invalid type. Please use 'app' or 'lib'."
+		exit 1
+	fi
+}
+
+# Execute main only if script is called directly
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+	main "$@"
 fi
