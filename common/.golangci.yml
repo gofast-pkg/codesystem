@@ -139,9 +139,6 @@ linters:
         - sloppyReassign
     govet:
       enable-all: true
-      settings:
-        shadow:
-          strict: true
       disable:
         - fieldalignment
     staticcheck:

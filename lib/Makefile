@@ -12,6 +12,7 @@ GODOC_PROCESS=godoc_process.txt
 LINTER_VERSION=v2.11.4
 MOCKERY_VERSION=v3.7.0
 MODULE_NAME := $(shell go list -m)
+PKGS := $(shell go list ./... | grep -v mocks)
 # CODESYSTEM UPDATER
 CODESYSTEM=lib-codesystem.zip
 CODESYSTEM_CHECKER=codesystem-checker.zip
@@ -100,7 +101,7 @@ tests: utest bench
 .PHONY: utest
 utest: --create-tmp-folders
 	@echo "tests running ..."
-	@go test -v -count=1 -race -coverprofile=${IGNORED_FOLDER}/${COVERAGE_FILE} -covermode=atomic ./... \
+	@go test -v -count=1 -race -coverprofile=${IGNORED_FOLDER}/${COVERAGE_FILE} -covermode=atomic ${PKGS} \
 	> ${IGNORED_FOLDER}/${TESTREPORT_FILE} || {	cat ${IGNORED_FOLDER}/${TESTREPORT_FILE} \
 	| sed ''/PASS/s//`printf "\033[32mPASS\033[0m"`/'' \
 	| sed ''/FAIL/s//`printf "\033[35mFAIL\033[0m"`/'' \
