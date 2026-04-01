@@ -1,6 +1,5 @@
 # CHANGELOG
 
-## v0.5.1
+## v0.5.2
 
 - update configuration for golangci-lint
-- update make tests rule to remove mocks from the coverage report.

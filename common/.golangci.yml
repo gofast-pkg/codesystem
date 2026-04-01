@@ -17,7 +17,6 @@ formatters:
     - gofmt
     - gofumpt
     - goimports
-    - golines
     - swaggo
   exclusions:
     generated: strict
