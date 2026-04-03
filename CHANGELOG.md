@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.5.2
+## v0.6.0
 
-- update configuration for golangci-lint
+- update action to use env CODESYSTEM_IGNORED_FILES

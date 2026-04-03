@@ -138,6 +138,8 @@ main() {
 		exit 1
 	fi
 
+	echo "files ignored by codesystem: $CODESYSTEM_IGNORED_FILES"
+
 	if [ "$TYPE" = "app" ]; then
 		init "$APP_ZIP"
 	elif [ "$TYPE" = "lib" ]; then

@@ -36,11 +36,17 @@ Read the next for Github action details.
 
 **Required** The context path to find your files inside the repository. Default `.`
 
+### `ignored-files`
+
+**Optionnal** The folder(s) or file(s) to skip during the codesystem validation. Value is a string with on or more element separated by space character. Default is empty.
+
 ### Environment variable
 
 `CODESYSTEM_IGNORED_FILES`, optionnal environment variable to skip the validation of folder(s) and or files(s). Value is a string with one or more element separated by space character.
 
 Example: CODESYTEM_IGNORED_FILES=".github Makefile"
+
+> Don't forget to add this env in your repository variables to skip files in your ci.
 
 ## Outputs
 
@@ -62,8 +68,7 @@ jobs:
         with:
           type: 'app'
           context: '.'
-        env:
-          CODESYSTEM_IGNORED_FILES=".github"
+          ignored-files: '.mockery.yml'
 ```
 
 ## Install or update

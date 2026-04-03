@@ -1,5 +1,7 @@
 FROM alpine:latest
 
+ENV CODESYSTEM_IGNORED_FILES=""
+
 RUN apk update && apk upgrade
 RUN apk --no-cache add curl
 RUN apk --no-cache add zip
