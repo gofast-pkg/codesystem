@@ -11,12 +11,18 @@ inputs:
     description: 'path to the context to check'
     required: true
     default: '.'
+  ignored-files:
+    description: 'The folder(s) or file(s) to skip during the codesystem validation. Value is a string with on or more element separated by space character. Default is empty.'
+    required: false
+    default: ''
 outputs:
   config:
     description: 'valid status of the code system'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    CODESYSTEM_IGNORED_FILES: ${{ inputs.ignored-files }}
   args:
     - ${{ inputs.type }}
     - ${{ inputs.context }}
