@@ -7,9 +7,14 @@ on:
     types:
       - completed
 
+permissions:
+  contents: read
+
 jobs:
 
   release:
+    permissions:
+      contents: write
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:

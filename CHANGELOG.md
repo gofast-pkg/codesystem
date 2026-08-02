@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## v0.6.0
+## v0.7.0
 
-- update action to use env CODESYSTEM_IGNORED_FILES
+- update release action to use explicit token authaurization
